@@ -1,0 +1,93 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "description": "",
+      "version": "1.0.0",
+      "title": "Countries API"
+    },
+    "host": "accounts.cbd.int",
+    "basePath": "/api/v2013",
+    "schemes": [
+      "https"
+    ],
+    "paths": {
+      "/countries": {
+        "get": {
+          "summary": "Get countries",
+          "description": "Returns a list of countries",
+          "produces": ["application/json"],
+          "responses": {
+            "200": {
+              "description": "Successful operation",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/Country"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "definitions": {
+      "Country": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "treaties": {
+            "type": "object",
+            "properties": {
+              "XXVII8": {
+                "$ref": "#/definitions/Treaty"
+              },
+              "XXVII8a": {
+                "$ref": "#/definitions/Treaty"
+              },
+              "XXVII8b": {
+                "$ref": "#/definitions/Treaty"
+              },
+              "XXVII8c": {
+                "$ref": "#/definitions/Treaty"
+              }
+            }
+          },
+          "name": {
+            "type": "object",
+            "properties": {
+              "en": { "type": "string" },
+              "ar": { "type": "string" },
+              "es": { "type": "string" },
+              "fr": { "type": "string" },
+              "ru": { "type": "string" },
+              "zh": { "type": "string" }
+            }
+          },
+          "__v": {
+            "type": "integer"
+          },
+          "code2": {
+            "type": "string"
+          },
+          "code3": {
+            "type": "string"
+          }
+        }
+      },
+      "Treaty": {
+        "type": "object",
+        "properties": {
+          "signature": { "type": "string" },
+          "deposit": { "type": "string" },
+          "instrument": { "type": "string" },
+          "party": { "type": "string" }
+        }
+      }
+    }
+  }
+  

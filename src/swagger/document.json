@@ -1,0 +1,119 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Documents API",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://bch.cbddev.xyz/api/{version}",
+      "description": "API server with versioning",
+      "variables": {
+        "version": {
+          "default": "v2013",
+          "enum": [
+            "v2013",
+            "v2018"
+          ]
+        }
+      }
+    }
+  ],
+  "paths": {
+    "/documents/{id}": {
+      "get": {
+        "summary": "Get document by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Document ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Document"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Document": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "identifier": {
+                "type": "string"
+              },
+              "schema": {
+                "type": "string"
+              },
+              "languages": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "government": {
+            "type": "object",
+            "properties": {
+              "identifier": {
+                "type": "string"
+              }
+            }
+          },
+          "isAichiTarget": {
+            "type": "boolean"
+          },
+          "otherAichiTargets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "identifier": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "aichiTargets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "identifier": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "title": {
+            "type": "object",
+            "properties": {
+              "en": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

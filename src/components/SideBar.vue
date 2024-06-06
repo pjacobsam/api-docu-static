@@ -69,6 +69,22 @@ export default {
         {
           label: "Partner API",
           icon: "lock",
+          children:[
+              {
+                  label:"Documents",
+                  children:[
+                      {
+                          label:"Validate",
+                          children:[
+                              {
+                                  label:"GET",
+                                  route:"/partner/documents/validate"
+                              }
+                          ]
+                      }
+                  ]
+              }
+          ]
         },
       ],
     };

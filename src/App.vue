@@ -1,8 +1,7 @@
 <template>
-  
   <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">Navbar</a>
+      <router-link class="navbar-brand" to="/">Navbar</router-link>
       <button
         class="navbar-toggler"
         type="button"
@@ -50,31 +49,37 @@
             >
           </li>
         </ul>
-        <router-link class="ms-3 nav-link" to="/login">Login / Signin</router-link>
+        <router-link v-if="!isAuthenticated" class="ms-3 nav-link" to="/login"
+          >Login / Signin</router-link
+        >
+        <a v-else class="ms-3 nav-link" href="#" @click="logout">Logout</a>
       </div>
     </div>
   </nav>
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-3">
-        <SideBar />
-      </div>
-      <div class="col-md-9">
-        <router-view></router-view>
-      </div>
-    </div>
-  </div>
+  <router-view></router-view>
 </template>
 
 <script>
-import SideBar from "./components/SideBar.vue"
-
 export default {
   name: "App",
-  components:{
-    SideBar
-  },
+  components: {},
   data() {
+    return {
+      isAuthenticated: !!localStorage.getItem("authToken"),
+    };
+  },
+  methods: {
+    logout() {
+      localStorage.removeItem("authToken");
+      this.isAuthenticated = false;
+      this.$router.push("/");
+    },
+  },
+  watch: {
+    // Watch for changes in localStorage to update isAuthenticated
+    $route() {
+      this.isAuthenticated = !!localStorage.getItem("authToken");
+    },
   },
 };
 </script>
@@ -94,7 +99,8 @@ export default {
   margin: 20px 0; /* Optional: adds some spacing around the table */
 }
 
-.markdown-content th, .markdown-content td {
+.markdown-content th,
+.markdown-content td {
   border: 1px solid #ddd;
   padding: 8px;
 }

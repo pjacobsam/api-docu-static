@@ -1,0 +1,232 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Document Validation API",
+    "version": "1.0.0",
+    "description": "API for validating documents"
+  },
+  "servers": [
+    {
+      "url": "https://bch.cbddev.xyz",
+      "description": "CBD Dev Server"
+    }
+  ],
+  "paths": {
+    "/api/v2013/documents/x/validate": {
+      "put": {
+        "summary": "Validate a document",
+        "parameters": [
+          {
+            "name": "schema",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "absPermit"
+          }
+        ],
+        "requestBody": {
+          "description": "Document to be validated",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "header": {
+                    "type": "object",
+                    "properties": {
+                      "identifier": {
+                        "type": "string",
+                        "example": "83BB01FB-4B0D-34DC-1B11-E67BA99EC2AF"
+                      },
+                      "schema": {
+                        "type": "string",
+                        "example": "absPermit"
+                      },
+                      "languages": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "example": ["en"]
+                      }
+                    },
+                    "required": ["identifier", "schema", "languages"]
+                  },
+                  "government": {
+                    "type": "object",
+                    "properties": {
+                      "identifier": {
+                        "type": "string",
+                        "example": "us"
+                      }
+                    },
+                    "required": ["identifier"]
+                  }
+                },
+                "required": ["header", "government"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Document validated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "identifier": {
+                      "type": "string",
+                      "example": "83BB01FB-4B0D-34DC-1B11-E67BA99EC2AF"
+                    },
+                    "schema": {
+                      "type": "string",
+                      "example": "absPermit"
+                    },
+                    "locales": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": ["en"]
+                    },
+                    "title": {
+                      "type": "object"
+                    },
+                    "summary": {
+                      "type": "object"
+                    },
+                    "metaData": {
+                      "type": "object",
+                      "properties": {
+                        "government": {
+                          "type": "string",
+                          "example": "us"
+                        }
+                      }
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "code": {
+                            "type": "string",
+                            "example": "Error.Mandatory"
+                          },
+                          "property": {
+                            "type": "string",
+                            "example": "absCNA"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "identifier": "83BB01FB-4B0D-34DC-1B11-E67BA99EC2AF",
+                  "schema": "absPermit",
+                  "locales": ["en"],
+                  "title": {},
+                  "summary": {},
+                  "metaData": {
+                    "government": "us"
+                  },
+                  "errors": [
+                    {
+                      "code": "Error.Mandatory",
+                      "property": "absCNA"
+                    },
+                    {
+                      "code": "Error.Mandatory",
+                      "property": "title"
+                    },
+                    {
+                      "code": "Error.Mandatory",
+                      "property": "dateOfIssuance"
+                    },
+                    {
+                      "code": "Error.Mandatory",
+                      "property": "picGranted"
+                    },
+                    {
+                      "code": "Error.Mandatory",
+                      "property": "matEstablished"
+                    },
+                    {
+                      "code": "Error.Mandatory",
+                      "property": "providers"
+                    },
+                    {
+                      "code": "Error.Mandatory",
+                      "property": "entitiesToWhomPICGranted"
+                    },
+                    {
+                      "code": "Error.Mandatory",
+                      "property": "subjectMatter"
+                    },
+                    {
+                      "code": "Error.Mandatory",
+                      "property": "usages"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Bad Request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Authorization",
+        "description": "Ticket {Auth Token}"
+      }
+    }
+  }
+}

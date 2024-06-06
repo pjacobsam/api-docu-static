@@ -15,7 +15,7 @@
 import SideBar from "../components/SideBar.vue"
 
 export default {
-  name: "MainLayout",
+  name: "CHMLayout",
   components:{
     SideBar
   },

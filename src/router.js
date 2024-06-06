@@ -2,26 +2,64 @@ import {createRouter, createWebHistory} from 'vue-router'
 import CountryPage from "./pages/CountryPage.vue"
 import DocumentPage from "./pages/DocumentPage.vue";
 import IntroductionPage from "./pages/Introduction.vue";
+// import IntroductionBCH from "./pages/IntroductionBCH.vue"
+import DocumentsValidatePage from "./pages/DocumentsValidatePage.vue"
 import LoginPage from "./pages/LoginPage.vue"
+import AuthLayout from "./layouts/AuthLayout.vue"
+import MainLayout from "./layouts/MainLayout.vue"
+// import CHMLayout from "./layouts/CHMLayout.vue"
 
 const router =createRouter({
     history: createWebHistory(),
     routes:[
         {
             path:"/",
-            component: IntroductionPage
+            component: MainLayout,
+            children:[
+                {
+                    path:"",
+                    component:IntroductionPage,
+                    name:"Introduction"
+                },
+            ]
         },
         {
-            path:"/public/countries",
-            component:CountryPage
+            path:"/public",
+            component:MainLayout,
+            children:[
+                {
+                    path:"countries",
+                    component:CountryPage,
+                    name:"Country"
+                },
+                {
+                    path:"document",
+                    component:DocumentPage,
+                    name:"Document"
+                }
+            ]
         },
         {
-            path:"/public/document",
-            component:DocumentPage
+            path:"/partner",
+            component:MainLayout,
+            children:[
+                {
+                    path:"documents/validate",
+                    component:DocumentsValidatePage,
+                    name:"DocumentsValidate"
+                }
+            ]
         },
         {
             path:"/login",
-            component:LoginPage
+            component:AuthLayout,
+            children:[
+                {
+                    path:"",
+                    component:LoginPage,
+                    name:"Login"
+                }
+            ]
         }
     ]
 })

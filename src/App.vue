@@ -1,7 +1,7 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+  <nav class="navbar navbar-dark bg-dark navbar-expand-lg navbar-light bg-light sticky-top">
     <div class="container-fluid">
-      <router-link class="navbar-brand" to="/">Navbar</router-link>
+      <router-link class="navbar-brand" to="/">API Documentation</router-link>
       <button
         class="navbar-toggler"
         type="button"
@@ -16,10 +16,10 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
+             <router-link class="nav-link" to="/">Home</router-link>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
+            <router-link class="nav-link" to="/chm">Link</router-link>
           </li>
           <li class="nav-item dropdown">
             <a
@@ -49,10 +49,10 @@
             >
           </li>
         </ul>
-        <router-link v-if="!isAuthenticated" class="ms-3 nav-link" to="/login"
+        <router-link v-if="!isAuthenticated" class="ms-3 text-secondary text-decoration-none" to="/login"
           >Login / Signin</router-link
         >
-        <a v-else class="ms-3 nav-link" href="#" @click="logout">Logout</a>
+        <a v-else class="ms-3 nav-link text-secondary text-decoration-none" href="#" @click="logout">Logout</a>
       </div>
     </div>
   </nav>

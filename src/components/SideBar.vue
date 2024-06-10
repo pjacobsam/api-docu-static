@@ -38,7 +38,13 @@ export default {
           children: [
             {
               label: "Introduction",
-              route: "/",
+              route: "/bch",
+              realm: "bch",
+            },
+            {
+              label: "Introduction",
+              route: "/chm",
+              realm: "chm",
             },
           ],
         },
@@ -51,7 +57,8 @@ export default {
               children: [
                 {
                   label: "GET",
-                  route: "/public/countries",
+                  route: "/bch/public/countries",
+                  realm: "bch",
                 },
               ],
             },
@@ -60,7 +67,8 @@ export default {
               children: [
                 {
                   label: "GET",
-                  route: "/public/document",
+                  route: "/bch/public/document",
+                  realm: "bch",
                 },
               ],
             },
@@ -69,27 +77,63 @@ export default {
         {
           label: "Partner API",
           icon: "lock",
-          children:[
-              {
-                  label:"Documents",
-                  children:[
-                      {
-                          label:"Validate",
-                          children:[
-                              {
-                                  label:"GET",
-                                  route:"/partner/documents/validate"
-                              }
-                          ]
-                      }
-                  ]
-              }
-          ]
+          children: [
+            {
+              label: "Documents",
+              children: [
+                {
+                  label: "Validate",
+                  children: [
+                    {
+                      label: "GET",
+                      route: "/bch/partner/documents/validate",
+                      realm: "bch",
+                    },
+                  ],
+                },
+                {
+                  label: "IRCC",
+                  children: [
+                    {
+                      label: "Documents",
+                      children: [
+                        {
+                          label: "GET",
+                          route: "/bch/partner/ircc/documents",
+                          realm: "bch",
+                        },
+                      ],
+                    },
+                  ],
+                },
+                 {
+                  label: "CNA",
+                  children: [
+                    {
+                      label: "Documents",
+                      children: [
+                        {
+                          label: "GET",
+                          route: "/bch/partner/cna/documents",
+                          realm: "bch",
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
         },
       ],
     };
   },
   computed: {
+    realm() {
+      const realm = this.$router.currentRoute.value.fullPath.split("/")[1];
+      const validRealms = ["bch", "abs", "chm"];
+      return validRealms.includes(realm) ? realm : "bch";
+    },
     filteredMenuTree() {
       const filterMenu = (items) => {
         return items
@@ -101,7 +145,10 @@ export default {
               }
             }
             if (
-              item.label.toLowerCase().includes(this.searchQuery.toLowerCase())
+              item.label
+                .toLowerCase()
+                .includes(this.searchQuery.toLowerCase()) &&
+              item.realm === this.realm
             ) {
               return item;
             }

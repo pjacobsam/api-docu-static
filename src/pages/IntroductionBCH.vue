@@ -1,6 +1,6 @@
 <template>
     <div>
-        Introduction BCH Second layout
+        <h1>Introduction CHM</h1>
     </div>
 </template>
 

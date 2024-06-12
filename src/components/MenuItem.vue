@@ -1,75 +1,52 @@
 <template>
-  <div class="wrapper">
-    <aside id="sidebar" class="expand">
-      <div class="d-flex">
-        <button id="toggle-btn" type="button">
-          <!-- <i class="bi bi-list"></i> -->
-        </button>
-        <div class="sidebar-logo">
-          <a href="#"></a>
-        </div>
-      </div>
-      <div>
-        <input type="text" class="form-control w-75 mx-auto" />
-      </div>
-      <ul class="sidebar-nav">
-        <menu-item v-for="item in menuTree" :key="item.label" :item="item"></menu-item>
-      </ul>
-      <div class="sidebar-footer">
-        <a href="#" class="sidebar-link">
-          <!-- <i class="bi bi-box-arrow-left"></i>
-          <span>Logout</span> -->
-        </a>
-      </div>
-    </aside>
-  </div>
+  <li class="sidebar-item" :class="{ 'has-dropdown': hasChildren }">
+    <router-link v-if="!hasChildren" :to="item.route" class="sidebar-link">
+      <i :class="item.icon"></i>
+      <span>{{ item.label }}</span>
+    </router-link>
+    <a
+      v-else
+      href="#"
+      class="sidebar-link has-dropdown"
+      @click.prevent="toggleDropdown"
+    >
+      <i :class="item.icon"></i>
+      <span>{{ item.label }}</span>
+    </a>
+    <ul
+      v-if="hasChildren"
+      class="sidebar-dropdown list-unstyled collapse"
+      :class="{ show: isOpen }"
+    >
+      <menu-item
+        v-for="child in item.children"
+        :key="child.label"
+        :item="child"
+      ></menu-item>
+    </ul>
+  </li>
 </template>
 
 <script>
-import MenuItem from "./MenuItem.vue"
-
 export default {
-  name: "SideBar",
-  components:{
-    MenuItem
-  },
-  mounted() {
-    const hamburger = document.querySelector("#toggle-btn");
-
-    hamburger.addEventListener("click", function () {
-      document.querySelector("#sidebar").classList.toggle("expand");
-    });
+  name: "MenuItem",
+  props: {
+    item: Object,
   },
   data() {
     return {
-      menuTree: [
-        {
-          label: "Introduction",
-          icon: "bi bi-list-task",
-          route: "/",
-        },
-        {
-          label: "IRCC",
-          icon: "bi bi-shield-lock",
-          children: [
-            {
-              label: "Documents",
-              route: "/bch/partner/ircc/documents",
-            },
-          ],
-        },
-        {
-          label: "CNA",
-          icon: "bi bi-shield-lock",
-          children: [
-            {
-              label: "Documents",
-              route: "/bch/partner/cna/documents",
-            },
-          ],
-        },
-      ],
+      isOpen: false,
     };
+  },
+  computed: {
+    hasChildren() {
+      return this.item.children && this.item.children.length;
+    },
+  },
+  methods: {
+    toggleDropdown() {
+      this.isOpen = !this.isOpen;
+    },
   },
 };
 </script>

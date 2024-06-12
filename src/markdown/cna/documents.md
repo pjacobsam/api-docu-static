@@ -1,29 +1,23 @@
 # Fetching CNA Documents
 
-### Request
-- **HTTP Method:** GET
-- **Content Type:** application/json
-- **URL:** `https://absch.cbddev.xyz/api/v2013/documents`
+## Endpoint
 
-### Parameters
-| Property      | Type    | Required | Description                                    |
-|---------------|---------|----------|------------------------------------------------|
-| $filter       | String  | required | Filter query parameter                         |
-| $orderby      | String  | required | Order by query parameter                       |
-| $skip         | Integer | optional | Number of records to skip                      |
-| $top          | Integer | optional | Maximum number of records to return            |
-| cache         | Boolean | required | Cache query parameter                          |
-| collection    | String  | required | Collection query parameter                     |
-| Authorization | String  | required | Authorization token (format: `Ticket {Token}`) |
+**GET** `/api/v2013/documents`
 
-### Request example
-```javascript
-fetch('https://absch.cbddev.xyz/api/v2013/documents/?$filter=(type eq \'authority\')&$orderby=updatedOn desc&$skip=0&$top=25&cache=false&collection=my', {
-  method: 'GET',
-  headers: {
-    'Content-Type': 'application/json',
-    'Authorization': 'Ticket E89965C145F1F8021E6A2C09819111CA992A4DB2E07558C17448B9105F2FF85CD713691BB6B32E2BF386906BFB46B5B758045F33AB2380E12C0C6B523020445E37127502780BBFB4658DB12D67443CB6443DFC8704AA2CA880D6A96EAEC89FE6E42EAC4BC012D94AFCC8AAEDFD7C7EF5C83504E71CDDF2554C41A86C77CEFDBC'
-  },
-})
-  .then((response) => response.json())
-  .then((json) => console.log(json));
+## Headers
+
+| Field           | Type   | Description                                      |
+|-----------------|--------|--------------------------------------------------|
+| Authorization   | String | Token to use to authenticate the request         |
+| Accept          | String | Result format. Allowed values: `application/json`|
+| Realm (optional)| String | Context in which the Clearing-House request is made. Allowed values: `ABS`, `CHM` |
+
+## Query Parameters
+
+| Field           | Type   | Description                                                                                                     |
+|-----------------|--------|-----------------------------------------------------------------------------------------------------------------|
+| collection (optional) | String | The collection system query option allows clients to filter a collection of resources. Allowed values: `my`, `mydrafts` |
+| $filter (optional)    | String | The `$filter` system query option allows clients to filter a collection of resources. See: [OData $filter](https://www.odata.org/documentation/odata-version-2-0/uri-conventions/#SystemQueryOptions) |
+| $orderby (optional)   | String | The `$orderby` system query option allows clients to request resources in a particular order. See: [OData $orderby](https://www.odata.org/documentation/odata-version-2-0/uri-conventions/#OrderbySystemQueryOption) |
+| $top (optional)       | String | The `$top` system query option requests the number of items in the queried collection to be included in the result. See: [OData $top](https://www.odata.org/documentation/odata-version-2-0/uri-conventions/#TopSystemQueryOption). A client can request a particular page of items by combining `$top` and `$skip`. |
+| $skip (optional)      | String | The `$skip` query option requests the number of items in the queried collection that are to be skipped and not included in the result. See: [OData $skip](https://www.odata.org/documentation/odata-version-2-0/uri-conventions/#SkipSystemQueryOption). A client can request a particular page of items by combining `$top` and `$skip`. |

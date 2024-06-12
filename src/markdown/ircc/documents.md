@@ -1,27 +1,24 @@
 # Fetching ABS Permit Documents
 
-### Request
-- **HTTP Method:** GET
-- **Content Type:** application/json
-- **URL:** `http://localhost:2010/api/v2013/documents`
+## Endpoint
 
-### Parameters
-| Property      | Type    | Required | Description                                    |
-|---------------|---------|----------|------------------------------------------------|
-| $filter       | String  | required | Filter query parameter                         |
-| $orderby      | String  | required | Order by query parameter                       |
-| cache         | Boolean | optional | Cache query parameter                          |
-| collection    | String  | required | Collection query parameter                     |
-| Authorization | String  | required | Authorization token (format: `Ticket {Token}`) |
+**GET** `/api/v2013/documents`
 
-### Request example
-```javascript
-fetch('http://localhost:2010/api/v2013/documents/?$filter=(type eq \'absPermit\')&$orderby=updatedOn desc&cache=false&collection=mydraft', {
-  method: 'GET',
-  headers: {
-    'Content-Type': 'application/json',
-    'Authorization': 'Ticket {Token}'
-  },
-})
-  .then((response) => response.json())
-  .then((json) => console.log(json))
+## Headers
+
+| Field           | Type   | Description                                      |
+|-----------------|--------|--------------------------------------------------|
+| Authorization   | String | Token to use to authenticate the request         |
+| Accept          | String | Result format. Allowed values: `application/json`|
+| Realm (optional)| String | Context in which the Clearing-House request is made. Allowed values: `ABS`, `CHM` |
+
+## Query Parameters
+
+| Field           | Type   | Description                                                                                                     |
+|-----------------|--------|-----------------------------------------------------------------------------------------------------------------|
+| collection (optional) | String | The collection system query option allows clients to filter a collection of resources. Allowed values: `my`, `mydrafts` |
+| $filter (optional)    | String | The `$filter` system query option allows clients to filter a collection of resources. See: [OData $filter](https://www.odata.org/documentation/odata-version-2-0/uri-conventions/#SystemQueryOptions) |
+| $orderby (optional)   | String | The `$orderby` system query option allows clients to request resources in a particular order. See: [OData $orderby](https://www.odata.org/documentation/odata-version-2-0/uri-conventions/#OrderbySystemQueryOption) |
+| $top (optional)       | String | The `$top` system query option requests the number of items in the queried collection to be included in the result. See: [OData $top](https://www.odata.org/documentation/odata-version-2-0/uri-conventions/#TopSystemQueryOption). A client can request a particular page of items by combining `$top` and `$skip`. |
+| $skip (optional)      | String | The `$skip` query option requests the number of items in the queried collection that are to be skipped and not included in the result. See: [OData $skip](https://www.odata.org/documentation/odata-version-2-0/uri-conventions/#SkipSystemQueryOption). A client can request a particular page of items by combining `$top` and `$skip`. |
+

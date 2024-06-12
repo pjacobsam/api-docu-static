@@ -33,7 +33,7 @@ export default {
   methods:{
       async login(){
           try{
-              const response = await axios.post("http://localhost:2010/api/v2013/authentication/token",{
+              const response = await axios.post("https://bch.cbddev.xyz/api/v2013/authentication/token",{
                   email: this.email,
                   password: this.password
               })

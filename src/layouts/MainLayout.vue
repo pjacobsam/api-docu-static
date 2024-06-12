@@ -1,26 +1,31 @@
 <template>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-md-3">
+      <div class="col d-flex p-0">
         <SideBar />
+        <div class="ps-4" style="overflow-y: scroll; width: 100%;">
+          <div class="row">
+            <div class="col-11">
+              <router-view></router-view>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="col-md-9">
-        <router-view></router-view>
-      </div>
+      <!-- <div class="col-md-9">
+      </div> -->
     </div>
   </div>
 </template>
 
 <script>
-import SideBar from "../components/SideBar.vue"
+import SideBar from "../components/SideBar.vue";
 
 export default {
   name: "MainLayout",
-  components:{
-    SideBar
+  components: {
+    SideBar,
   },
-  data() {
-  },
+  data() {},
 };
 </script>
 
@@ -39,7 +44,8 @@ export default {
   margin: 20px 0; /* Optional: adds some spacing around the table */
 }
 
-.markdown-content th, .markdown-content td {
+.markdown-content th,
+.markdown-content td {
   border: 1px solid #ddd;
   padding: 8px;
 }

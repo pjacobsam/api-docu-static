@@ -1,23 +1,18 @@
-# Getting a Resource
+# Fetching Documents
 
-### Request
-- **HTTP Method:** GET
-- **Content Type:** application/json
-- **URL:** `https://bch.cbddev.xyz/api/v2013/documents/{id}`
+## Endpoint
 
-### Parameters
-| Property | Type   | Required | Description       |
-|----------|--------|----------|-------------------|
-| id       | String | required | ID of the document|
+**GET** `/api/v2013/documents/:uid`
 
-### Request example
-```javascript
-fetch('https://bch.cbddev.xyz/api/v2013/documents/335B2220-77E1-1211-8A49-6656A2FFDFB9', {
-  method: 'GET',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-})
-  .then((response) => response.json())
-  .then((json) => console.log(json))
-```
+## Headers
+
+| Field           | Type   | Description                                                                                              |
+|-----------------|--------|----------------------------------------------------------------------------------------------------------|
+| Accept          | String | Result format. Allowed values: `*`, `application/json`. `*` indicates raw data as submitted.             |
+| Realm (optional)| String | Context in which the Clearing-House request is made. Allowed values: `ABS`, `CHM`.                        |
+
+## URL Parameter
+
+| Field | Type   | Description                                                                                  |
+|-------|--------|----------------------------------------------------------------------------------------------|
+| uid   | String | Identifier of the document. The value is case-sensitive. Allowed values: `/^[A-Za-z0-9\-_]{11,128}$/` |

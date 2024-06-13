@@ -42,42 +42,62 @@ export default {
     };
   },
   mounted() {
-    const script = document.createElement("script");
-    script.src =
-      "https://cdn.jsdelivr.net/npm/swagger-ui-dist/swagger-ui-bundle.js";
-    script.onload = () => {
-      const ui = window.SwaggerUIBundle({
-        spec: this.documentJson, // Load your JSON schema here
-        dom_id: "#swagger-ui",
-        operationsSorter: "alpha",
-        presets: [
-          window.SwaggerUIBundle.presets.apis,
-          window.SwaggerUIStandalonePreset,
-        ],
-        layout: "BaseLayout",
-      });
+    this.initializeSwaggerUI();
+  },
+  watch: {
+    $route() {
+      this.initializeSwaggerUI();
+    },
+  },
+  methods: {
+    initializeSwaggerUI() {
+      const script = document.createElement("script");
+      script.src =
+        "https://cdn.jsdelivr.net/npm/swagger-ui-dist/swagger-ui-bundle.js";
+      script.onload = () => {
+        const ui = window.SwaggerUIBundle({
+          spec: this.documentJson,
+          dom_id: "#swagger-ui",
+          operationsSorter: "alpha",
+          presets: [
+            window.SwaggerUIBundle.presets.apis,
+            window.SwaggerUIStandalonePreset,
+          ],
+          layout: "BaseLayout",
+        });
 
-      if (this.protected) {
-        if (this.authToken) {
-          // Add authorization token to the Swagger UI
-          ui.initOAuth({
-            clientId: "your-client-id",
-            clientSecret: "your-client-secret-if-required",
-            realm: "your-realms",
-            appName: "your-app-name",
-            scopeSeparator: " ",
-            additionalQueryStringParams: {},
-          });
-          const prefixedAuthToken = `Ticket ${this.authToken}`;
-          ui.preauthorizeApiKey("ApiKeyAuth", prefixedAuthToken);
-        } else {
-          // Use MutationObserver to disable the "Try it out" buttons after they are rendered
-          const observer = new MutationObserver(() => {
-            const tryOutButtons = document.querySelectorAll(".try-out__btn");
-            tryOutButtons.forEach((button) => {
-              button.disabled = true;
-              button.title = "Authorization token is missing";
+        if (this.protected) {
+          if (this.authToken) {
+            ui.initOAuth({
+              clientId: "your-client-id",
+              clientSecret: "your-client-secret-if-required",
+              realm: "your-realms",
+              appName: "your-app-name",
+              scopeSeparator: " ",
+              additionalQueryStringParams: {},
             });
+            const prefixedAuthToken = `Ticket ${this.authToken}`;
+            ui.preauthorizeApiKey("ApiKeyAuth", prefixedAuthToken);
+          } else {
+            const observer = new MutationObserver(() => {
+              const tryOutButtons = document.querySelectorAll(".try-out__btn");
+              tryOutButtons.forEach((button) => {
+                button.disabled = true;
+                button.title = "Authorization token is missing";
+              });
+            });
+
+            const targetNode = document.getElementById("swagger-ui");
+            const config = { childList: true, subtree: true };
+
+            observer.observe(targetNode, config);
+          }
+
+          const observer = new MutationObserver(() => {
+            const authorizeBtn = document.querySelector(".auth-wrapper");
+            if (authorizeBtn) {
+              authorizeBtn.parentNode.removeChild(authorizeBtn);
+            }
           });
 
           const targetNode = document.getElementById("swagger-ui");
@@ -85,20 +105,9 @@ export default {
 
           observer.observe(targetNode, config);
         }
-        // Remove the "Authorize" button
-        const observer = new MutationObserver(() => {
-          const authorizeBtn = document.querySelector(".auth-wrapper");
-          if (authorizeBtn) {
-            authorizeBtn.parentNode.removeChild(authorizeBtn);
-          }
-        });
-        const targetNode = document.getElementById("swagger-ui");
-        const config = { childList: true, subtree: true };
-
-        observer.observe(targetNode, config);
-      }
-    };
-    document.head.appendChild(script);
+      };
+      document.head.appendChild(script);
+    },
   },
   computed: {
     compiledMarkdown() {

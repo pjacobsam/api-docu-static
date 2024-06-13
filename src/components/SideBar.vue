@@ -10,10 +10,20 @@
         </div>
       </div>
       <div>
-        <input type="text" class="form-control w-75 mx-auto" />
+        <input
+          type="text"
+          class="form-control w-75 mx-auto"
+          v-model="searchQuery"
+          placeholder="Search..."
+          @input="filterMenu"
+        />
       </div>
       <ul class="sidebar-nav">
-        <menu-item v-for="item in menuTree" :key="item.label" :item="item"></menu-item>
+        <menu-item
+          v-for="item in filteredMenuTree"
+          :key="item.label"
+          :item="item"
+        ></menu-item>
       </ul>
       <div class="sidebar-footer">
         <a href="#" class="sidebar-link">
@@ -26,12 +36,14 @@
 </template>
 
 <script>
-import MenuItem from "./MenuItem.vue"
+import MenuItem from "./MenuItem.vue";
+
+const markdownContext = require.context("../markdown", true, /\.md$/);
 
 export default {
   name: "SideBar",
-  components:{
-    MenuItem
+  components: {
+    MenuItem,
   },
   mounted() {
     const hamburger = document.querySelector("#toggle-btn");
@@ -39,14 +51,21 @@ export default {
     hamburger.addEventListener("click", function () {
       document.querySelector("#sidebar").classList.toggle("expand");
     });
+
+    this.loadContents();
+
+    console.log("MENUTREE", this.menuTree);
   },
   data() {
     return {
+      searchQuery: "",
       menuTree: [
         {
           label: "Introduction",
           icon: "bi bi-list-task",
           route: "/",
+          contentPath: "./introduction/introduction.md",
+          content: "",
         },
         {
           label: "IRCC",
@@ -55,6 +74,8 @@ export default {
             {
               label: "Documents",
               route: "/bch/partner/ircc/documents",
+              contentPath: "./ircc/documents.md",
+              content: "",
             },
           ],
         },
@@ -65,11 +86,81 @@ export default {
             {
               label: "Documents",
               route: "/bch/partner/cna/documents",
+              contentPath: "./cna/documents.md",
+              content: "",
+            },
+          ],
+        },
+        {
+          label: "Public",
+          icon: "bi bi-shield-lock",
+          children: [
+            {
+              label: "Document",
+              children: [
+                {
+                  label:"GET",
+                  route:"/bch/public/document",
+                  contentPath: "./document.md",
+                  content: "",
+                }
+              ]
             },
           ],
         },
       ],
+      filteredMenuTree: [],
     };
+  },
+  methods: {
+    loadContents() {
+      this.menuTree.forEach((item) => {
+        if (item.children) {
+          item.children.forEach((child) => {
+            child.content = this.loadMarkdownContent(child.contentPath);
+          });
+        } else {
+          item.content = this.loadMarkdownContent(item.contentPath);
+        }
+      });
+
+      this.filteredMenuTree = JSON.parse(JSON.stringify(this.menuTree));
+    },
+    loadMarkdownContent(path) {
+      try {
+        return markdownContext(path).default;
+      } catch (error) {
+        console.error("Error loading markdown content:", error);
+        return "";
+      }
+    },
+    filterMenu() {
+      const query = this.searchQuery.toLowerCase();
+      this.filteredMenuTree = this.menuTree
+        .map((item) => this.filterItem(item, query))
+        .filter((item) => item);
+    },
+    filterItem(item, query) {
+      let filteredItem = { ...item };
+      if (filteredItem.children) {
+        filteredItem.children = filteredItem.children
+          .map((child) => this.filterItem(child, query))
+          .filter((child) => child);
+        if (
+          filteredItem.children.length > 0 ||
+          (filteredItem.content &&
+            filteredItem.content.toLowerCase().includes(query))
+        ) {
+          return filteredItem;
+        }
+      } else if (
+        filteredItem.content &&
+        filteredItem.content.toLowerCase().includes(query)
+      ) {
+        return filteredItem;
+      }
+      return null;
+    },
   },
 };
 </script>

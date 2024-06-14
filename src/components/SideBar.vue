@@ -114,16 +114,17 @@ export default {
   },
   methods: {
     loadContents() {
-      this.menuTree.forEach((item) => {
-        if (item.children) {
-          item.children.forEach((child) => {
-            child.content = this.loadMarkdownContent(child.contentPath);
-          });
-        } else {
-          item.content = this.loadMarkdownContent(item.contentPath);
-        }
-      });
-
+      const loadContentRecursively = (items) => {
+        items.forEach((item) => {
+          if (item.children) {
+            loadContentRecursively(item.children);
+          }
+          if (item.contentPath) {
+            item.content = this.loadMarkdownContent(item.contentPath);
+          }
+        });
+      };
+      loadContentRecursively(this.menuTree);
       this.filteredMenuTree = JSON.parse(JSON.stringify(this.menuTree));
     },
     loadMarkdownContent(path) {
